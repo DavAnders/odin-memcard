@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
 import ScoreBoard from "./Scoreboard";
+import "/src/styles/cardContainer.css";
 
 function CardContainer() {
   const [cards, setCards] = useState([]);
@@ -15,10 +16,12 @@ function CardContainer() {
   }, []);
 
   async function fetchCards() {
+    const apiKey = import.meta.env.VITE_GIPHY_API_KEY;
+    const limit = 12;
     setIsLoading(true);
     try {
       const response = await fetch(
-        "https://api.giphy.com/v1/gifs/trending?api_key=YOUR_API_KEY"
+        `https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=${limit}`
       );
       const data = await response.json();
       setCards(shuffleArray(data.data));
