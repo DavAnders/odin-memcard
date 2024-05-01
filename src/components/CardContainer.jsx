@@ -3,8 +3,11 @@ import Card from "./Card";
 
 function CardContainer() {
   const [cards, setCards] = useState([]);
+  const [clickedCardIds, setClickedCardIds] = useState(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
 
   useEffect(() => {
     let cancelFetch = false; // Flag to track if the fetch should be cancelled
@@ -17,7 +20,8 @@ function CardContainer() {
         );
         const data = await response.json();
         if (!cancelFetch) {
-          setCards(data.data);
+          setCards(data.data.map((item) => ({ ...item, clicked: false })));
+          setIsLoading(false);
         }
       } catch (err) {
         if (!cancelFetch) {
@@ -37,6 +41,23 @@ function CardContainer() {
     };
   }, []);
 
+  function handleCardClick(id) {
+    if (clickedCardIds.has(id)) {
+      // Card has been clicked before, reset the score
+      setScore(0);
+      setClickedCardIds(new Set());
+    } else {
+      // Increment the score and mark the card as clicked
+      setScore((prev) => prev + 1);
+      setClickedCardIds((prev) => new Set(prev).add(id));
+      if (score + 1 > bestScore) {
+        setBestScore(score + 1);
+      }
+    }
+    // Shuffle the cards
+    setCards((prevCards) => [...prevCards].sort(() => 0.5 - Math.random()));
+  }
+
   return (
     <div className="card-container">
       {isLoading ? (
@@ -49,7 +70,7 @@ function CardContainer() {
             key={card.id}
             imageUrl={card.images.fixed_height.url}
             title={card.title}
-            onClick={() => console.log("Card clicked")}
+            onClick={() => handleCardClick(card.id)}
           />
         ))
       )}
