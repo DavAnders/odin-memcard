@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Card from "./Card";
 import ScoreBoard from "./Scoreboard";
+import ToggleButton from "./ToggleButton";
 import "/src/styles/cardContainer.css";
 
 function CardContainer() {
@@ -10,27 +11,29 @@ function CardContainer() {
   const [error, setError] = useState(null);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [contentType, setContentType] = useState("gifs");
 
-  useEffect(() => {
-    fetchCards();
-  }, []);
-
-  async function fetchCards() {
+  const fetchCards = useCallback(async () => {
     const apiKey = import.meta.env.VITE_GIPHY_API_KEY;
     const limit = 12;
+    setCards([]);
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=${limit}`
+        `https://api.giphy.com/v1/${contentType}/trending?api_key=${apiKey}&limit=${limit}`
       );
       const data = await response.json();
-      setCards(shuffleArray(data.data));
+      setCards(data.data);
       setIsLoading(false);
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
     }
-  }
+  }, [contentType]);
+
+  useEffect(() => {
+    fetchCards();
+  }, [fetchCards]);
 
   function handleCardClick(id) {
     if (clickedCardIds.has(id)) {
@@ -47,20 +50,30 @@ function CardContainer() {
     setCards(shuffleArray(cards));
   }
 
+  function handleContentTypeToggle() {
+    setContentType((prevType) => (prevType === "gifs" ? "stickers" : "gifs"));
+  }
+
   return (
     <div>
-      <ScoreBoard score={score} bestScore={bestScore} />
+      <ScoreBoard score={score} bestScore={bestScore}>
+        <ToggleButton
+          contentType={contentType}
+          onToggle={handleContentTypeToggle}
+        />
+      </ScoreBoard>
       <div className="card-container">
         {isLoading ? (
           <p>Loading...</p>
         ) : error ? (
           <p>Error: {error}</p>
         ) : (
-          cards.map((card) => (
+          cards.map((card, index) => (
             <Card
-              key={card.id}
+              key={card.id + index}
               imageUrl={card.images.fixed_height.url}
               title={card.title}
+              isClicked={clickedCardIds.has(card.id)}
               onClick={() => handleCardClick(card.id)}
             />
           ))
