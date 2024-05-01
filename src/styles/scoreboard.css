@@ -1,10 +1,25 @@
 .scoreboard {
   font-family: monospace;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 20px;
   background-color: #333;
   color: #fff;
+}
+
+.scoreboard > div,
+.scoreboard > button {
+  flex: 1;
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
 }
 
 .scoreboard h2 {
