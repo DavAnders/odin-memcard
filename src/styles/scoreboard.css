@@ -1,0 +1,12 @@
+.scoreboard {
+  font-family: monospace;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+}
+
+.scoreboard h2 {
+  margin: 0;
+}

@@ -1,0 +1,28 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: ghostwhite;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img {
+  width: 100%; /* full width of the card */
+  height: auto; /* maintain aspect ratio */
+  object-fit: cover; /* cover the area without distorting */
+}
+
+.card p {
+  font-family: monospace;
+  margin: 5px 0 0 0;
+  font-size: 0.8rem;
+  color: #333;
+  text-align: center;
+}
