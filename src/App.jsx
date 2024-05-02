@@ -12,7 +12,7 @@ function App() {
           <CardContainer />
         </main>
         <footer>
-          <h3>Rules: click all 12 without clicking the same one twice!</h3>
+          <h3>Click all 12 without clicking the same one twice!</h3>
           <a href="https://github.com/DavAnders">
             <p>DavAnders</p>
           </a>
